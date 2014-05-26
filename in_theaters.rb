@@ -3,6 +3,12 @@ require 'json'
 
 movie_data = JSON.parse(File.read('in_theaters.json'))
 
+def sort_movies(movies_array)
+  sorted_array = movies_array.sort_by { |movie| (movie["ratings"]["critics_score"] + movie["ratings"]["audience_score"]) / 2}
+  reverse_array = sorted_array.reverse
+  return reverse_array
+end
+#sort_movies(movie_data["movies"])
 
 def return_rating(movie_hash)
   critic_score = movie_hash["ratings"]["critics_score"]
@@ -47,7 +53,8 @@ def print_movie(movie_hash)
   cast_members_array = cast_members(movie_hash, 3)
   cast = cast_members_string(cast_members_array)
 
-  puts "#{average_scores} - #{title} (#{mpaa_rating}) starring #{cast}"
+  one_movie = "#{average_scores} - #{title} (#{mpaa_rating}) starring #{cast}"
+  return one_movie
 
 end
 #print_movie(movie_data["movies"][0])
@@ -58,9 +65,31 @@ def movie_info(movie_data)
   puts "In Theaters Now:"
   puts nil
 
-  movies = movie_data["movies"]
+  movies = sort_movies(movie_data["movies"])
   links = movie_data["links"]
   link_template = movie_data["link_template"]
 
+  array_of_movies = []
+  movies.each do |movie|
+    one_movie = print_movie(movie)
+    array_of_movies << one_movie
+  end
+
+  array_of_movies.each do |movie|
+    puts movie
+  end
+
 end
-#movie_info(movie_data)
+movie_info(movie_data)
+
+
+
+
+
+
+
+
+
+
+
+
